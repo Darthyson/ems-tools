@@ -1,5 +1,5 @@
 <?php
-require_once("/emsincludes/emsqry.inc");
+require_once("emsincludes/emsqry.inc");
 
 function getWWInfo($src){
   return getInfo($src,"ww requestdata");
