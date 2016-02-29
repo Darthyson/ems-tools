@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-require("/emsincludes/emsqry.inc");
+require("emsincludes/emsqry.inc");
 $history = array();
 $path = "/";
 $pathes = explode("|","/rc/|/hk1/|/hk2/|/hk3/|/hk4/|/ww/|/ww/zirkpump/|/uba/");
