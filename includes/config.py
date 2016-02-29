@@ -1,4 +1,4 @@
-mysql_socket_path = "/var/run/mysql/mysql.sock"
+mysql_socket_path = "/var/run/mysql/mysqld.sock"
 mysql_user = "ems"
 mysql_password = "buderusems"
 mysql_db_name = "ems_data"
