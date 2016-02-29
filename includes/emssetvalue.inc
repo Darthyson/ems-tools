@@ -1,5 +1,5 @@
 <?php
-require_once("/emsincludes/emsqry.inc");
+require_once("emsincludes/emsqry.inc");
 if (isset($_GET["source"])){
   $key = trim($_GET["source"]);
   $val = trim($_GET["value"]);
