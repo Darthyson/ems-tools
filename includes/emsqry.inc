@@ -1,5 +1,5 @@
 <?php
-require("/emsincludes/config.php");
+require("emsincludes/config.php");
 $daystr = array("0" => "Montag",
 		"1" => "Dienstag",
 		"2" => "Mittwoch",
