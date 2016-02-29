@@ -268,7 +268,7 @@ function schedule2graph($sch,$outfn){
 
     $p = popen("gnuplot", "w");
     fwrite($p,"set terminal png font 'arial' 12 size 800, 450\n");
-     fwrite($p,"set grid lc rgb '#aaaaaa' lt 1 lw 0,5\n");
+     fwrite($p,"set grid lc rgb '#aaaaaa' lt 1 lw 0.5\n");
      fwrite($p,"set title 'Schaltzeiten'\n");
      fwrite($p,"set xdata time\n");
      fwrite($p,"set xlabel 'Zeit'\n");
@@ -402,7 +402,7 @@ function getActSchedule($src){
 function getEmsStatusCodes(){
   global $mysql_host, $mysql_user, $mysql_pass;
   $link=mysql_connect($mysql_host, $mysql_user, $mysql_pass)
-     or die("Keine Verbindung zur Datenbank möglich: " . mysql_error());
+     or die("Keine Verbindung zur Datenbank mÃ¶glich: " . mysql_error());
   mysql_query("use ems_data");
      
   $result = mysql_query("SELECT a.value as sc, b.value as fc, a.starttime as time ".
