@@ -1,5 +1,5 @@
 <?php
-$min_collector_version=2014031201;
+$min_collector_version=2016030701;
 $mysql_host = "localhost";
 $mysql_user= "ems";
 $mysql_pass = "buderusems";
