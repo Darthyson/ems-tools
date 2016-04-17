@@ -142,6 +142,7 @@ function getContactInfo($src){
   $out = array();
   foreach($res as $l){
     if ($l!="OK\n") $out[] = trim($l);
+    if ($l="OK\n") $out[1] = trim($l);
   }
   return $out[$src-1];;  
 }
