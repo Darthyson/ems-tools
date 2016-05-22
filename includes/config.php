@@ -5,7 +5,7 @@ $mysql_host = "localhost";
 $mysql_user= "ems";
 $mysql_pass = "buderusems";
 $graphpath = "/usr/syno/etc/www/ems-front/graphs/";
-$emsscriptpath = "/opt/ems-tools/scripts/";
+$emsscriptpath = "/var/local/ems-tools/scripts/";
 $tmpdir="/tmp/";
 $html_cols=3;
 
