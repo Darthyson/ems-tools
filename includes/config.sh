@@ -1,5 +1,5 @@
 # Diskstation with DSM 6.0
-BINDIR="/opt/ems-tools/scripts/"
+BINDIR="/var/local/ems-tools/scripts/"
 GRAPHDIR="/usr/syno/etc/www/ems-front/graphs/"
 
 # Moosys Frontend:
