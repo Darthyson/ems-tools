@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-$incdir = "../emsincludes/";
+$incdir = "/emsincludes/";
 require($incdir."emsgetinfo.inc");
 
 $AT = getHKInfo("auslegtemp");
