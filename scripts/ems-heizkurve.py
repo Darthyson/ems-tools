@@ -6,7 +6,7 @@ import os
 import subprocess
 import sys
 import time
-sys.path.append('../emsincludes/')
+sys.path.append('/emsincludes/')
 import config
 
 @contextlib.contextmanager
