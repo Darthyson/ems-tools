@@ -1,6 +1,6 @@
 #!/bin/bash
 . /emsincludes/config.sh
-export GDFONTPATH=/usr/share/fonts/
+export GDFONTPATH=/usr/share/fonts/truetype/
 $BINDIR/ems-gen-graphs.py $GRAPHDIR hour > /dev/null 2>&1
 $BINDIR/ems-gen-graphs.py $GRAPHDIR day > /dev/null 2>&1
 $BINDIR/ems-gen-graphs.py $GRAPHDIR halfweek > /dev/null 2>&1
