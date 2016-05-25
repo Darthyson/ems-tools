@@ -4,9 +4,9 @@ $min_collector_version=2016030701;
 $mysql_host = "localhost";
 $mysql_user= "ems";
 $mysql_pass = "buderusems";
-$graphpath = "/usr/syno/etc/www/ems-front/graphs/";
-$emsscriptpath = "/var/local/ems-tools/scripts/";
-$tmpdir="/tmp/";
+$graphpath = "/volume1/web/ems-front/graphs/";
+$emsscriptpath = "/var/local/ems-tools/scripts";
+$tmpdir="/volume1/@tmp/";
 $html_cols=3;
 
 # moosys frontend:
