@@ -2,6 +2,7 @@
 <?php
 $incdir = "/emsincludes/";
 require($incdir."emsgetinfo.inc");
+export GDFONTPATH=/usr/share/fonts/truetype/
 
 $AT = getHKInfo("auslegtemp");
 $RTO = getHKInfo("raumoffset");
