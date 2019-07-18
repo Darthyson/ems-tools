@@ -401,23 +401,37 @@ function getActSchedule($src){
 
 function getEmsStatusCodes(){
   global $mysql_host, $mysql_user, $mysql_pass;
-  $link=mysql_connect($mysql_host, $mysql_user, $mysql_pass)
-     or die("Keine Verbindung zur Datenbank möglich: " . mysql_error());
-  mysql_query("use ems_data");
-     
-  $result = mysql_query("SELECT a.value as sc, b.value as fc, a.starttime as time ".
+  //$link=mysql_connect($mysql_host, $mysql_user, $mysql_pass)
+     //or die("Keine Verbindung zur Datenbank moeglich: " . 
+mysql_error());
+  //mysqli_query("use ems_data");
+  $mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass, 
+'ems_data');
+  if ($mysqli->connect_error) {
+    die('Connect Error (' . $mysqli->connect_errno . ') '
+            . $mysqli->connect_error);
+  }
+
+  /*$result = mysql_query("SELECT a.value as sc, b.value as fc, 
+a.starttime as time ".
                       "FROM state_data a, state_data b ".
                       "WHERE a.sensor = 200 and b.sensor = 201 ".
                       "       and a.starttime = b.starttime ".
                       "ORDER BY time DESC" )
-        or die("Abfrage fehlgeschlagen! ". mysql_error());
-                 
-  $res = array();
-  while($row = mysql_fetch_assoc($result) ){
-    $res[]=str_replace(" ","|",trim($row['time']))."|".$row['sc']."|".$row['fc'];
-  }                                                   
-  return $res;
-}                                                   
+        or die("Abfrage fehlgeschlagen! ". mysql_error());*/
+  $query = "SELECT a.value as sc, b.value as fc, a.starttime as time 
+FROM state_data a, state_data b WHERE a.sensor = 200 and b.sensor = 201 
+and a.starttime = b.starttime ORDER BY time DESC";
+  if ($result = $mysqli->query($query)) {
+
+    $res = array();
+    while($row = mysqli_fetch_assoc($result) ){
+      $res[]=str_replace(" 
+","|",trim($row['time']))."|".$row['sc']."|".$row['fc'];
+    }
+    return $res;
+  }
+}
 
 function ldat_parse($s){
 
