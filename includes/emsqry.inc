@@ -403,7 +403,7 @@ function getEmsStatusCodes(){
   global $mysql_host, $mysql_user, $mysql_pass;
   //$link=mysql_connect($mysql_host, $mysql_user, $mysql_pass)
      //or die("Keine Verbindung zur Datenbank moeglich: " . 
-mysql_error();
+     //mysql_error());
   //mysqli_query("use ems_data");
   $mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass, 
 'ems_data');
