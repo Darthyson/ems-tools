@@ -1,5 +1,5 @@
 <?php
-require("/emsincludes/config.php");
+require_once("/emsincludes/config.php");
 $daystr = array("0" => "Montag",
 		"1" => "Dienstag",
 		"2" => "Mittwoch",
@@ -61,7 +61,19 @@ function idiv($a,$b){
 function doEmsCommand($in){
   global $ems_socket;
   open_ems();
-  $in = $in."\n";
+  if (strpos("cache fetch", $in) === False) { // need to check with === identity operator
+	$in = "cache fetch ".$in."\n";
+  }
+  
+  if (strpos($in, "requestdata")) {
+	$in = trim(str_replace("requestdata", "", $in));
+	#print('Replaced:');
+  }
+
+  $in = trim($in)."\n";
+  #print('doEmsCommand.$in: "'.$in.'"');
+  #print('<p></p>');
+  
   do {
     while (socket_read($ems_socket, 32)); # Remove garbage
     socket_write($ems_socket, $in, strlen($in));
@@ -80,19 +92,24 @@ function doEmsCommand($in){
             break;
           }
 
-          if (strpos(" ".$res,"OK"))  break 2;
-          if (strpos(" ".$res,"ERRARGS")) break 2;
-          if (strpos(" ".$res,"ERRCMD")) break 2;
+          if (strpos(" ".$res,"OK")) break 2; // leave while and do loops
+          if (strpos(" ".$res,"ERRARGS")) break 2; // leave while and do loops
+          if (strpos(" ".$res,"ERRCMD")) break 2; // leave while and do loops
     }
   } while (strpos(" ".$res,"ERRBUSY"));
 
   $resa = explode("\n",$res);
   if (!trim(end($resa))) array_pop($resa);
+  #foreach ($resa as $tmp) {
+	#echo 'doEmsCommand.$resa: '.$tmp;
+	#echo '<p></p>';
+  #}
   return $resa;
 
 }
 
 function doEmsDataCommand($in="",$wait=false){
+$start = microtime(true);
   global $ems_socket, $reqdone;
   if (!isset($reqdone)) $reqdone = array();
   $in = trim($in);
@@ -101,37 +118,51 @@ function doEmsDataCommand($in="",$wait=false){
 		"hk3 requestdata" => "hk3 partyhours",
 		"hk4 requestdata" => "hk4 partyhours",
 		"ww requestdata" => "ww desinfectionday",
-                "rc requestdata" => "buildingtype",
+		"rc requestdata" => "buildingtype",
 		"uba requestdata" => "heaterpump followupminutes");
   $check = "";
   $oldest = 0;
-  if ($in){
-    $oldest = mktime();
-
-    if ($wait || !isset($reqdone[$in])){  # If wait is forced or data not yet available get it
-      if (isset($checks[$in])) $check = $checks[$in];
-      doEmsCommand($in); 
-      $reqdone[$in] = true;
-    } 
+	if ($in){
+		$oldest = mktime();
+		if ($wait || !isset($reqdone[$in])){  # If wait is forced or data not yet available get it
+			if (isset($checks[$in])) $check = $checks[$in];
+			#echo 'doEmsDataCommand.$in Position if ($in): '.$in;
+			#echo '<p></p>';
+			$res = doEmsCommand($in);
+			$reqdone[$in] = true;
+		}
+	}
+	else
+	{
+		$timeout2=0;
+		while ($timeout2 < 20){
+			$timeout2++;
+			$res = doEmsCommand("cache fetch");
+			if (!$check) break;   # No need to wait for anything
+			foreach ($res as $r){
+			  if (str_replace($check,"",$r)!=$r){
+				$va = explode("|",$r);
+				$valtime  = trim($va[1]);
+				if ($valtime > $oldest){
+				  break 2;
+				}
+			  }
+			}
+			usleep(100000);
+	}
   }
-  $tout2=0;
-  while ($tout2 < 20){
-    $tout2++;
-    $res = doEmsCommand("cache fetch");
-    if (!$check) break;   # No need to wait for anything
-    foreach ($res as $r){
-      if (str_replace($check,"",$r)!=$r){
-        $va = explode("|",$r);
-        $valtime  = trim($va[1]);
-        if ($valtime > $oldest){
-          break 2;
-        }
-      }
-    }
-    usleep(100000);
+  
+  if ($res) {
+	  if (end($res)=="OK") array_pop($res);    # remove trailing OK...
+	  while (!trim(end($res))) {
+		  array_pop($res);   # ... and empty lines
+		  #print "doEmsDataCommand time: ".(microtime(true) - $start)." ms";
+	  }
   }
-  if (end($res)=="OK") array_pop($res);    # remove trailing OK...
-  while (!trim(end($res))) array_pop($res);   # ... and empty lines
+  #foreach ($res as $l){
+  #  print $l;
+  #}
+  #print "doEmsDataCommand time: ".(microtime(true) - $start)." ms";
   return $res;
 }
 
@@ -426,8 +457,9 @@ and a.starttime = b.starttime ORDER BY time DESC";
 
     $res = array();
     while($row = mysqli_fetch_assoc($result) ){
-      $res[]=str_replace(" 
-","|",trim($row['time']))."|".$row['sc']."|".$row['fc'];
+      // $tmp = trim($row['time']);
+      // print ($tmp);
+      $res[]=str_replace(" ","|",trim($row['time']))."|".$row['sc']."|".$row['fc'];
     }
     return $res;
   }
@@ -448,6 +480,7 @@ function ldat_parse($s){
 }
 
 function getEmsLiveData($withtimes=false){
+  $start = microtime(true);
   $in = doEmsDataCommand();
   $inf = array();
   foreach ($in as $z){
@@ -464,6 +497,8 @@ function getEmsLiveData($withtimes=false){
   }
 
   ksort($inf);
+  #print "getEmsLiveData time: ".(microtime(true) - $start)." ms";
+
   return $inf;
 }
 
@@ -488,3 +523,4 @@ function d2c($diff,$limit,$low,$high){
   }
   return $rs;
 }
+?>
